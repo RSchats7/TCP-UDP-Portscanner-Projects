@@ -60,7 +60,7 @@
             </GridPane>
          </children>
       </VBox>
-      <TableView prefHeight="400.0" prefWidth="469.0">
+      <TableView fx:id="TableView" prefHeight="400.0" prefWidth="469.0">
         <columns>
           <TableColumn fx:id="ScanId" prefWidth="75.0" text="Scan ID" />
           <TableColumn fx:id="Date" prefWidth="75.0" text="Date" />
