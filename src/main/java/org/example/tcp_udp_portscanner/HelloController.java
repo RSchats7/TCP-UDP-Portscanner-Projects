@@ -9,6 +9,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.control.TextField;
 
 public class HelloController {
 
@@ -52,6 +53,12 @@ public class HelloController {
     private Button UpdateBtn;
 
     @FXML
+    private TextField portField;
+
+    @FXML
+    private TextField targetField;
+
+    @FXML
     void ClearBtnClicked(MouseEvent event) {
 
     }
@@ -63,10 +70,18 @@ public class HelloController {
 
     @FXML
     void RunScanBtnClicked(MouseEvent event) {
-        String target = "localhost";
-        int port = 80;
+        String target = targetField.getText();
 
-        boolean open = scanner.isPortOpen(target,port,200);
+        int port;
+
+        try {
+            port = Integer.parseInt(portField.getText());
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid port number");
+            return;
+        }
+
+        boolean open = scanner.isPortOpen(target ,port,200);
 
         ScanResult result = new ScanResult(
                 scanResults.size() + 1,
