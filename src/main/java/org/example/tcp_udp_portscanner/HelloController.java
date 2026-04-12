@@ -81,22 +81,22 @@ public class HelloController {
             return;
         }
 
-        boolean open = scanner.isPortOpen(target ,port,200);
+        boolean open = scanner.isUdpPortOpen(target, port, 200);
 
         ScanResult result = new ScanResult(
                 scanResults.size() + 1,
                 target,
                 port,
-                "TCP",
-                open ? "OPEN" : "CLOSED",
+                "UDP",
+                open ? "OPEN" : "OPEN|FILTERED",
                 java.time.LocalDateTime.now().toString()
-
         );
         scanResults.add(result);
     }
 
     @FXML
     void UpdateBtnClicked(MouseEvent event) {
+
 
     }
     @FXML
