@@ -1,15 +1,11 @@
 package org.example.tcp_udp_portscanner;
 
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.collections.ObservableList;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.control.TextField;
 
 public class HelloController {
 
@@ -70,7 +66,13 @@ public class HelloController {
 
     @FXML
     void RunScanBtnClicked(MouseEvent event) {
+
         String target = targetField.getText();
+
+        if (target.isEmpty() || portField.getText().isEmpty()) {
+            System.out.println("Fields cannot be empty");
+            return;
+        }
 
         int port;
 
@@ -81,16 +83,31 @@ public class HelloController {
             return;
         }
 
-        boolean open = scanner.isUdpPortOpen(target, port, 200);
+        if (port < 1 || port > 65535) {
+            System.out.println("Invalid port range");
+            return;
+        }
+
+        String protocol = protocolBox.getValue();
+        boolean open;
+
+        if (protocol.equals("TCP")) {
+            open = scanner.isPortOpen(target, port, 200);
+        } else {
+            open = scanner.isUdpPortOpen(target, port, 200);
+        }
 
         ScanResult result = new ScanResult(
                 scanResults.size() + 1,
                 target,
                 port,
-                "UDP",
-                open ? "OPEN" : "OPEN|FILTERED",
+                protocol,
+                protocol.equals("UDP")
+                        ? (open ? "OPEN" : "OPEN|FILTERED")
+                        : (open ? "OPEN" : "CLOSED"),
                 java.time.LocalDateTime.now().toString()
         );
+
         scanResults.add(result);
     }
 
@@ -109,7 +126,11 @@ public class HelloController {
         Protocol.setCellValueFactory(new PropertyValueFactory<>("protocol"));
         Status.setCellValueFactory(new PropertyValueFactory<>("status"));
         Date.setCellValueFactory(new PropertyValueFactory<>("date"));
+        protocolBox.getItems().addAll("TCP", "UDP");
+        protocolBox.setValue("TCP"); // default
     }
+    @FXML
+    private ComboBox<String> protocolBox;
 
 
 }
