@@ -113,9 +113,10 @@ public class HelloController {
 
     @FXML
     void UpdateBtnClicked(MouseEvent event) {
-
-
+        exportToCSV(scanResults);
     }
+
+
     @FXML
     public void initialize() {
         TableView.setItems(scanResults);
@@ -132,5 +133,26 @@ public class HelloController {
     @FXML
     private ComboBox<String> protocolBox;
 
+    public void exportToCSV(ObservableList<ScanResult> results) {
+        try (java.io.PrintWriter writer = new java.io.PrintWriter("scan_results.csv")) {
 
+            writer.println("ScanID,Target,Port,Protocol,Status,Date");
+
+            for (ScanResult r : results) {
+                writer.println(
+                        r.getScanId() + "," +
+                                r.getTarget() + "," +
+                                r.getPort() + "," +
+                                r.getProtocol() + "," +
+                                r.getStatus() + "," +
+                                r.getDate()
+                );
+            }
+
+            System.out.println("Exported to scan_results.csv");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
